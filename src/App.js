@@ -35,7 +35,7 @@ const initialState = {
 function App() {
   const [todos, setTodos] = useState(initialState);
 
-  const { activeFilter } = ToPropertyDescriptor;
+  const { activeFilter } = todos;
   const tasksList = TASKS;
   const isTasksExist = tasksList && tasksList.length > 0;
 
