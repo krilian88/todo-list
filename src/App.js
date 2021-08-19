@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import {addTask} from './actions/actionCreator' 
+import {addTodo} from './actions/actionCreator' 
 
 import Title from './components/title/Title'
 import TodoInput from './components/todo-input/TodoInput'
@@ -10,43 +10,53 @@ import Footer from './components/footer/Footer'
 import './App.css';
 
 
-const TASKS = [
-  {
-    id: 1,
-    text: 'Learn ReactJS',
-    isCompleted: true,
-  },
-  {
-    id: 2,
-    text: 'Learn Redux',
-    isCompleted: false,
-  },
-  {
-    id: 3,
-    text: 'Learn React Router',
-    isCompleted: false,
-  }
-];
 
 const initialState = {
   activeFilter: 'all',
+  todoText: ''
 }
 
-function App() {
-  const [todos, setTodos] = useState(initialState);
+function App(props) {
+  const [tasks, setTasks] = useState(initialState);
 
-  const { activeFilter } = todos;
-  const tasksList = TASKS;
-  const isTasksExist = tasksList && tasksList.length > 0;
+  const handleInputChange = ({target: {value}}) => {
+    setTasks({
+      todoText: value
+    })
+  }
+
+  const addTodo = ({ key }) => {
+  const { todoText } = tasks;
+
+  if (todoText.length > 3 && key === 'Enter') {
+    const { addTodo } = props;
+
+    addTodo((new Date()).getTime(), todoText, false);
+
+    setTasks({
+      todoText: '',
+    })
+
+  } 
+}
+  const { activeFilter, todoText } = tasks;
+  const {todos} = props
+  const isTodoExist = todos && todos.length > 0;
 
   return (
     <div className="app-wrapper">
      <Title title="Todo App"/>
-     <TodoInput />
-     {isTasksExist && <TodoList tasksList={tasksList}/>}
-     {isTasksExist && <Footer amount={tasksList.length} activeFilter={activeFilter} />}
+     <TodoInput onKeyPress={addTodo} onChange={handleInputChange} value={todoText}/>
+     {isTodoExist && <TodoList todosList={todos}/>}
+     {isTodoExist && <Footer amount={todos.length} activeFilter={activeFilter} />}
     </div>
   );
 }
 
-export default App;
+// function mapStateToProps(state) {
+//   return { todos: state.todos }
+// }
+
+export default connect(state => ({
+  todos: state.todos
+}), {addTodo})(App);

@@ -5,9 +5,9 @@ import Todo from '../todo/Todo';
 
 import './TodoList.css';
 
-const TodoList = ({ tasksList }) => (
+const TodoList = ({ todosList }) => (
   <ul className="todo-list">
-    {tasksList.map(({ id, text, isCompleted }) => (
+    {todosList.map(({ id, text, isCompleted }) => (
       <Todo key={id} text={text} isCompleted={isCompleted} />
     ))}
   </ul>
