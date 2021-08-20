@@ -5,20 +5,24 @@ import Todo from '../todo/Todo';
 
 import './TodoList.css';
 
-const TodoList = ({ todosList }) => (
+const TodoList = ({ todos, removeTodo, completeTodo }) => (
   <ul className="todo-list">
-    {todosList.map(({ id, text, isCompleted }) => (
-      <Todo key={id} text={text} isCompleted={isCompleted} />
+    {todos.map(({ id, text, isCompleted }) => (
+      <Todo removeTodo={removeTodo} id={id} key={id} text={text} isCompleted={isCompleted} completeTodo={completeTodo}/>
     ))}
   </ul>
 );
 
 TodoList.propTypes = {
-  tasksList: PropTypes.array,
+  todos: PropTypes.array,
+  removeTodo: PropTypes.func,
+  completeTodo: PropTypes.func,
 }
 
 TodoList.defaultProps = {
-  tasksList: [],
+  todos: [],
+  removeTodo: () => {},
+  completeTodo: () => {},
 }
 
 export default TodoList;

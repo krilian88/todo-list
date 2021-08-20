@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import {addTodo} from './actions/actionCreator' 
+import {addTodo, removeTodo, completeTodo} from './actions/actionCreator' 
 
 import Title from './components/title/Title'
 import TodoInput from './components/todo-input/TodoInput'
@@ -40,14 +40,14 @@ function App(props) {
   } 
 }
   const { activeFilter, todoText } = tasks;
-  const {todos} = props
+  const {todos, removeTodo, completeTodo} = props
   const isTodoExist = todos && todos.length > 0;
 
   return (
     <div className="app-wrapper">
      <Title title="Todo App"/>
      <TodoInput onKeyPress={addTodo} onChange={handleInputChange} value={todoText}/>
-     {isTodoExist && <TodoList todosList={todos}/>}
+     {isTodoExist && <TodoList todos={todos} removeTodo={removeTodo} completeTodo={completeTodo} />}
      {isTodoExist && <Footer amount={todos.length} activeFilter={activeFilter} />}
     </div>
   );
@@ -59,4 +59,4 @@ function App(props) {
 
 export default connect(state => ({
   todos: state.todos
-}), {addTodo})(App);
+}), {addTodo, removeTodo, completeTodo})(App);

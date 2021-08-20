@@ -1,4 +1,4 @@
-import { ADD_TODO } from "../constants";
+import { ADD_TODO, COMPLETE_TODO, REMOVE_TODO } from "../constants";
 
 const TODOS = [
   {
@@ -29,6 +29,17 @@ export const todos = (state = TODOS, action) => {
           isCompleted: action.isCompleted,
         },
       ];
+    case REMOVE_TODO:
+      return [...state].filter((todo) => todo.id !== action.id);
+
+    case COMPLETE_TODO:
+      return [...state].map((todo) => {
+        if (todo.id === action.id) {
+          todo.isCompleted = !todo.isCompleted;
+        }
+        return todo;
+      });
+
     default:
       return state;
   }
