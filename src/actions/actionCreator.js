@@ -1,4 +1,4 @@
-import { ADD_TODO, COMPLETE_TODO, REMOVE_TODO } from '../constants';
+import { ADD_TODO, COMPLETE_TODO, REMOVE_TODO, CHANGE_FILTER } from '../constants';
 
 export const addTodo = (id, text, isCompleted) => ({
   type: ADD_TODO,
@@ -15,4 +15,9 @@ export const removeTodo = (id) => ({
 export const completeTodo = id => ({
   type: COMPLETE_TODO,
   id
+})
+
+export const changeFilter = activeFilter => ({
+  type: CHANGE_FILTER,
+  activeFilter
 })

@@ -1,54 +1,87 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-import {addTodo, removeTodo, completeTodo} from './actions/actionCreator' 
+import {
+  addTodo,
+  removeTodo,
+  completeTodo,
+  changeFilter,
+} from "./actions/actionCreator";
 
-import Title from './components/title/Title'
-import TodoInput from './components/todo-input/TodoInput'
-import TodoList from './components/todo-list/TodoList'
-import Footer from './components/footer/Footer'
-import './App.css';
-
-
+import Title from "./components/title/Title";
+import TodoInput from "./components/todo-input/TodoInput";
+import TodoList from "./components/todo-list/TodoList";
+import Footer from "./components/footer/Footer";
+import "./App.css";
 
 const initialState = {
-  activeFilter: 'all',
-  todoText: ''
-}
+  todoText: "",
+};
 
 function App(props) {
   const [tasks, setTasks] = useState(initialState);
 
-  const handleInputChange = ({target: {value}}) => {
+  const handleInputChange = ({ target: { value } }) => {
     setTasks({
-      todoText: value
-    })
-  }
+      todoText: value,
+    });
+  };
 
   const addTodo = ({ key }) => {
+    const { todoText } = tasks;
+
+    if (todoText.length > 3 && key === "Enter") {
+      const { addTodo } = props;
+
+      addTodo(new Date().getTime(), todoText, false);
+
+      setTasks({
+        todoText: "",
+      });
+    }
+  };
+
+  const filterTodos = (todos, activeFilter) => {
+    switch (activeFilter) {
+      case "completed":
+        return todos.filter((todo) => todo.isCompleted);
+      case "active":
+        return todos.filter((todo) => !todo.isCompleted);
+      default:
+        return todos;
+    }
+  };
+
+  const getActiveTodosCounter = (todos) => todos.filter(todo => !todo.isCompleted).length
+
   const { todoText } = tasks;
-
-  if (todoText.length > 3 && key === 'Enter') {
-    const { addTodo } = props;
-
-    addTodo((new Date()).getTime(), todoText, false);
-
-    setTasks({
-      todoText: '',
-    })
-
-  } 
-}
-  const { activeFilter, todoText } = tasks;
-  const {todos, removeTodo, completeTodo} = props
+  const { todos, removeTodo, completeTodo, filters, changeFilter } = props;
   const isTodoExist = todos && todos.length > 0;
+  const filteredTodos = filterTodos(todos, filters)
+  const todosCounter = getActiveTodosCounter(todos)
 
   return (
     <div className="app-wrapper">
-     <Title title="Todo App"/>
-     <TodoInput onKeyPress={addTodo} onChange={handleInputChange} value={todoText}/>
-     {isTodoExist && <TodoList todos={todos} removeTodo={removeTodo} completeTodo={completeTodo} />}
-     {isTodoExist && <Footer amount={todos.length} activeFilter={activeFilter} />}
+      <Title title="Todo App" />
+      <TodoInput
+        onKeyPress={addTodo}
+        onChange={handleInputChange}
+        value={todoText}
+      />
+      {isTodoExist && (
+        <TodoList
+          todos={filteredTodos}
+          removeTodo={removeTodo}
+          completeTodo={completeTodo}
+        />
+      )}
+      {isTodoExist && (
+        <Footer
+          amount={todosCounter}
+          activeFilter={filters}
+          changeFilter={changeFilter}
+        />
+      )}
     </div>
   );
 }
@@ -57,6 +90,10 @@ function App(props) {
 //   return { todos: state.todos }
 // }
 
-export default connect(state => ({
-  todos: state.todos
-}), {addTodo, removeTodo, completeTodo})(App);
+export default connect(
+  (state) => ({
+    todos: state.todos,
+    filters: state.filters,
+  }),
+  { addTodo, removeTodo, completeTodo, changeFilter }
+)(App);

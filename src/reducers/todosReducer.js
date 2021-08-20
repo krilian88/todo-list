@@ -1,24 +1,33 @@
 import { ADD_TODO, COMPLETE_TODO, REMOVE_TODO } from "../constants";
+import {load} from 'redux-localstorage-simple'
 
-const TODOS = [
-  {
-    id: 1,
-    text: "Learn ReactJS",
-    isCompleted: true,
-  },
-  {
-    id: 2,
-    text: "Learn Redux",
-    isCompleted: false,
-  },
-  {
-    id: 3,
-    text: "Learn React Router",
-    isCompleted: false,
-  },
-];
+let TODOS = load({namespace: 'todo-list'})
 
-export const todos = (state = TODOS, action) => {
+if (!TODOS || !TODOS.todos || !TODOS.todos.length) {
+  TODOS = {
+    todos: [],
+  }
+}
+
+// const TODOS = [
+//   {
+//     id: 1,
+//     text: "Learn ReactJS",
+//     isCompleted: true,
+//   },
+//   {
+//     id: 2,
+//     text: "Learn Redux",
+//     isCompleted: false,
+//   },
+//   {
+//     id: 3,
+//     text: "Learn React Router",
+//     isCompleted: false,
+//   },
+// ];
+
+export const todos = (state = TODOS.todos, action) => {
   switch (action.type) {
     case ADD_TODO:
       return [
@@ -30,10 +39,10 @@ export const todos = (state = TODOS, action) => {
         },
       ];
     case REMOVE_TODO:
-      return [...state].filter((todo) => todo.id !== action.id);
+      return state.filter((todo) => todo.id !== action.id);
 
     case COMPLETE_TODO:
-      return [...state].map((todo) => {
+      return state.map((todo) => {
         if (todo.id === action.id) {
           todo.isCompleted = !todo.isCompleted;
         }

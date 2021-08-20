@@ -14,7 +14,7 @@ const Todo = ({ text, isCompleted, removeTodo, id, completeTodo }) => (
 Todo.propTypes = {
   text: PropTypes.string,
   isCompleted: PropTypes.bool,
-  id: PropTypes.string,
+  id: PropTypes.number,
   removeTodo: PropTypes.func,
   completeTodo: PropTypes.func
 }
